@@ -14,18 +14,30 @@
   <name>SafetyNet Alerts</name>
   <description>API REST pour les services de secours</description>
   <properties>
-    <java.version>21</java.version>
+    <java.version>17</java.version>
   </properties>
   <dependencies>
     
-    <dependency>
+   <dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <scope>test</scope>
+  <exclusions>
+    <exclusion>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
+      <artifactId>spring-boot-starter-logging</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
 	<!-- Log4J -->
     <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-slf4j2-impl</artifactId>
+  <scope>test</scope>
 </dependency>
     <!-- Jackson for JSON -->
     <dependency>
