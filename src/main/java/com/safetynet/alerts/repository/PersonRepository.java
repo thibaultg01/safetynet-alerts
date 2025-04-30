@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface PersonRepository {
     List<Person> findAll() throws IOException;
     Optional<Person> findByName(String firstName, String lastName) throws IOException;
+    List<Person> findByLastName(String lastName);
+    Person findByFirstNameAndLastName(String firstName, String lastName);
 }
