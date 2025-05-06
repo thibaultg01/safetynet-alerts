@@ -11,4 +11,5 @@ public interface PersonRepository {
     Optional<Person> findByName(String firstName, String lastName) throws IOException;
     List<Person> findByLastName(String lastName);
     Person findByFirstNameAndLastName(String firstName, String lastName);
+    List<Person> findByAddress(String address);
 }

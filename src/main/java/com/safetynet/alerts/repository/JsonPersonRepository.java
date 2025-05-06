@@ -54,4 +54,11 @@ public class JsonPersonRepository implements PersonRepository {
                 .findFirst()
                 .orElse(null);
     }
+    
+    @Override
+    public List<Person> findByAddress(String address) {
+        return readPersonsFromFile().stream()
+                .filter(p -> p.getAddress().equalsIgnoreCase(address))
+                .collect(Collectors.toList());
+    }
 }
