@@ -24,4 +24,12 @@ public class JsonFirestationRepository implements FirestationRepository {
                 .map(Firestation::getAddress)
                 .collect(Collectors.toList());
     }
+    @Override
+    public int findStationNumberByAddress(String address) {
+        return dataLoader.getFirestations().stream()
+            .filter(f -> f.getAddress().equalsIgnoreCase(address))
+            .map(Firestation::getStation)
+            .findFirst()
+            .orElse(0);
+        }
 }
