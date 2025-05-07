@@ -24,19 +24,17 @@ public class CommunityEmailServiceImpl implements CommunityEmailService {
     
     @Override
     public List<String> getEmailsByCity(String city) {
-        try {
-            List<String> emails = personRepository.findAll().stream()
-                    .filter(p -> p.getCity().equalsIgnoreCase(city))
-                    .map(Person::getEmail)
-                    .distinct()
-                    .collect(Collectors.toList());
+        List<String> emails = personRepository.findAll().stream()
+                .filter(p -> p.getCity().equalsIgnoreCase(city))
+                .map(Person::getEmail)
+                .distinct()
+                .collect(Collectors.toList());
 
-            logger.debug("Emails found for city '{}': {}", city, emails);
-            return emails;
-
-        } catch (IOException e) {
-            logger.error("Erreur lors de la récupération des emails pour la ville : {}", city, e);
-            return List.of();
+        if (emails.isEmpty()) {
+            logger.info("Aucune adresse email trouvée pour la ville : {}", city);
+        } else {
+            logger.info("{} emails trouvés pour la ville {} : {}", emails.size(), city, emails);
         }
+        return emails;
     }
 }
