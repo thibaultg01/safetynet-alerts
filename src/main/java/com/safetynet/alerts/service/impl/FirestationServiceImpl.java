@@ -2,9 +2,10 @@ package com.safetynet.alerts.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.alerts.dto.FirestationCoverageResponseDTO;
@@ -20,7 +21,7 @@ import com.safetynet.alerts.utils.DateUtils;
 @Service
 public class FirestationServiceImpl implements FirestationService {
 
-	private static final Logger logger = LoggerFactory.getLogger(FirestationServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(FirestationServiceImpl.class);
 	
     private final FirestationRepository firestationRepository;
     private final PersonRepository personRepository;
@@ -85,5 +86,30 @@ public class FirestationServiceImpl implements FirestationService {
         response.setNumberOfChildren(children);
 
         return response;
+    }
+    
+    @Override
+    public List<String> getPhoneNumbersByFirestation(int stationNumber) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Recherche des adresses associées à la caserne n°{}", stationNumber);
+        }
+
+        List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Adresses trouvées pour la caserne n°{} : {}", stationNumber, addresses);
+        }
+
+        List<String> phoneNumbers = personRepository.findAll().stream()
+                .filter(person -> addresses.contains(person.getAddress()))
+                .map(Person::getPhone)
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Numéros de téléphone extraits : {}", phoneNumbers);
+        }
+
+        return phoneNumbers;
     }
 }
