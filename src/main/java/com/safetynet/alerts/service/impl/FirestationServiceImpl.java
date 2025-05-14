@@ -112,4 +112,19 @@ public class FirestationServiceImpl implements FirestationService {
 
         return phoneNumbers;
     }
+    
+    @Override
+    public void addMapping(String address, int station) {
+        firestationRepository.addMapping(address, station);
+    }
+
+    @Override
+    public void updateMapping(String address, int newStation) {
+        firestationRepository.updateMapping(address, newStation);
+    }
+
+    @Override
+    public void deleteMapping(String address, Integer station) {
+        firestationRepository.deleteMapping(address, station);
+    }
 }
