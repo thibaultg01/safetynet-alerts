@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.io.File;
 
@@ -39,6 +40,13 @@ public class JsonFirestationRepository implements FirestationRepository {
             .findFirst()
             .orElse(0);
         }
+    @Override
+    public Set<String> findAddressesByStationNumbers(List<Integer> stationNumbers) {
+        return dataLoader.getFirestations().stream()
+                .filter(f -> stationNumbers.contains(f.getStation()))
+                .map(Firestation::getAddress)
+                .collect(Collectors.toSet());
+    }
     @Override
     public void addMapping(String address, int station) {
         dataLoader.getFirestations().add(new Firestation(address, station));
