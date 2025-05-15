@@ -3,7 +3,6 @@ package com.safetynet.alerts.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -17,13 +16,13 @@ import com.safetynet.alerts.repository.PersonRepository;
 import com.safetynet.alerts.service.ChildAlertService;
 import com.safetynet.alerts.utils.DateUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Service
 public class ChildAlertServiceImpl implements ChildAlertService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ChildAlertServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(ChildAlertServiceImpl.class);
     private final PersonRepository personRepository;
     private final MedicalRecordRepository medicalRecordRepository;
 
