@@ -11,4 +11,7 @@ public interface PersonRepository {
     List<Person> findByLastName(String lastName);
     Person findByFirstNameAndLastName(String firstName, String lastName);
     List<Person> findByAddress(String address);
+    void save(Person person);
+    void deleteByName(String firstName, String lastName);
+    void update(Person updatedPerson);
 }
