@@ -69,8 +69,12 @@ public class PersonServiceImpl implements PersonService {
         if (logger.isDebugEnabled()) {
             logger.debug("Suppression de la personne : {} {}", firstName, lastName);
         }
-        personRepository.deleteByName(firstName, lastName);
-        logger.info("Suppression réussie pour la personne : {} {}", firstName, lastName);
+
+        boolean deleted = personRepository.deleteByName(firstName, lastName);
+        if (!deleted) {
+            logger.error("Personne introuvable pour suppression : {} {}", firstName, lastName);
+            throw new IllegalArgumentException("Personne introuvable.");
+        }
     }
 
     private Person convertToEntity(PersonDTO dto) {

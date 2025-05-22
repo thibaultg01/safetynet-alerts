@@ -4,6 +4,7 @@ import com.safetynet.alerts.dto.PersonDTO;
 import com.safetynet.alerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,15 +34,14 @@ public class PersonController {
      * @return 201 Created si l'ajout est un succès
      */
     @PostMapping
-    public ResponseEntity<Void> addPerson(@RequestBody PersonDTO personDto) {
-        logger.info("POST /person - Ajout de la personne : {} {}", personDto.getFirstName(), personDto.getLastName());
-        try {
-            personService.addPerson(personDto);
-            return ResponseEntity.status(201).build();
-        } catch (Exception e) {
-            logger.error("Erreur lors de l'ajout de la personne : {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<PersonDTO> addPerson(@RequestBody PersonDTO personDto) {
+    	if (logger.isDebugEnabled()) {
+            logger.debug("Réception de la requête POST /person avec : {}", personDto);
         }
+
+        PersonDTO created = personService.addPerson(personDto);
+        logger.info("Personne ajoutée avec succès : {} {}", created.getFirstName(), created.getLastName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     /**
@@ -51,15 +51,14 @@ public class PersonController {
      * @return 200 OK si la mise à jour est un succès
      */
     @PutMapping
-    public ResponseEntity<Void> updatePerson(@RequestBody PersonDTO personDto) {
-        logger.info("PUT /person - Mise à jour de la personne : {} {}", personDto.getFirstName(), personDto.getLastName());
-        try {
-            personService.updatePerson(personDto);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            logger.error("Erreur lors de la mise à jour de la personne : {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<PersonDTO> updatePerson(@RequestBody PersonDTO dto) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Réception de la requête PUT /person avec : {}", dto);
         }
+
+        PersonDTO updated = personService.updatePerson(dto);
+        logger.info("Personne mise à jour avec succès : {} {}", updated.getFirstName(), updated.getLastName());
+        return ResponseEntity.ok(updated);
     }
 
     /**
@@ -71,13 +70,12 @@ public class PersonController {
      */
     @DeleteMapping
     public ResponseEntity<Void> deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
-        logger.info("DELETE /person - Suppression de la personne : {} {}", firstName, lastName);
-        try {
-            personService.deletePerson(firstName, lastName);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            logger.error("Erreur lors de la suppression de la personne : {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().build();
+        if (logger.isDebugEnabled()) {
+            logger.debug("Réception de la requête DELETE /person avec : {} {}", firstName, lastName);
         }
+
+        personService.deletePerson(firstName, lastName);
+        logger.info("Personne supprimée avec succès : {} {}", firstName, lastName);
+        return ResponseEntity.noContent().build(); // 204 si suppression réussie
     }
 }

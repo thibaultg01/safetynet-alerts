@@ -16,76 +16,81 @@ import static org.mockito.Mockito.*;
 
 class PersonServiceImplTest {
 
-    private PersonRepository personRepository;
-    private PersonServiceImpl personService;
+    private PersonRepository repository;
+    private PersonServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        personRepository = mock(PersonRepository.class);
-        personService = new PersonServiceImpl(personRepository);
+        repository = mock(PersonRepository.class);
+        service = new PersonServiceImpl(repository);
     }
 
     @Test
     void testAddPerson_Success() {
-        PersonDTO dto = createSampleDto();
-        when(personRepository.findByName("John", "Doe")).thenReturn(Optional.empty());
+        PersonDTO dto = getSampleDTO();
+        when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
 
-        PersonDTO result = personService.addPerson(dto);
+        PersonDTO result = service.addPerson(dto);
 
         assertEquals(dto.getFirstName(), result.getFirstName());
-        verify(personRepository, times(1)).save(any(Person.class));
+        verify(repository).save(any());
     }
 
     @Test
     void testAddPerson_AlreadyExists() {
-        PersonDTO dto = createSampleDto();
-        when(personRepository.findByName("John", "Doe")).thenReturn(Optional.of(new Person()));
+        PersonDTO dto = getSampleDTO();
+        when(repository.findByName("John", "Doe")).thenReturn(Optional.of(new Person()));
 
-        assertThrows(IllegalArgumentException.class, () -> personService.addPerson(dto));
-        verify(personRepository, never()).save(any(Person.class));
+        assertThrows(IllegalArgumentException.class, () -> service.addPerson(dto));
+        verify(repository, never()).save(any());
     }
 
     @Test
     void testUpdatePerson_Success() {
-        PersonDTO dto = createSampleDto();
+        PersonDTO dto = getSampleDTO();
         Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Doe");
+        when(repository.findByName("John", "Doe")).thenReturn(Optional.of(person));
 
-        when(personRepository.findByName("John", "Doe")).thenReturn(Optional.of(person));
+        PersonDTO result = service.updatePerson(dto);
 
-        PersonDTO result = personService.updatePerson(dto);
-
-        assertEquals(dto.getAddress(), person.getAddress());
-        verify(personRepository, times(1)).update(person);
+        assertEquals(dto.getCity(), result.getCity());
+        verify(repository).update(any());
     }
 
     @Test
     void testUpdatePerson_NotFound() {
-        PersonDTO dto = createSampleDto();
-        when(personRepository.findByName("John", "Doe")).thenReturn(Optional.empty());
+        PersonDTO dto = getSampleDTO();
+        when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> personService.updatePerson(dto));
-        verify(personRepository, never()).update(any(Person.class));
+        assertThrows(IllegalArgumentException.class, () -> service.updatePerson(dto));
+        verify(repository, never()).update(any());
     }
 
     @Test
     void testDeletePerson_Success() {
-        doNothing().when(personRepository).deleteByName("John", "Doe");
+        when(repository.deleteByName("John", "Doe")).thenReturn(true);
 
-        assertDoesNotThrow(() -> personService.deletePerson("John", "Doe"));
-        verify(personRepository, times(1)).deleteByName("John", "Doe");
+        assertDoesNotThrow(() -> service.deletePerson("John", "Doe"));
+        verify(repository).deleteByName("John", "Doe");
     }
 
-    private PersonDTO createSampleDto() {
+    @Test
+    void testDeletePerson_NotFound() {
+        when(repository.deleteByName("John", "Doe")).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> service.deletePerson("John", "Doe"));
+        verify(repository).deleteByName("John", "Doe");
+    }
+
+    private PersonDTO getSampleDTO() {
         PersonDTO dto = new PersonDTO();
         dto.setFirstName("John");
         dto.setLastName("Doe");
-        dto.setAddress("123 Main St");
-        dto.setCity("Culver");
-        dto.setZip("97451");
-        dto.setPhone("000-000-0000");
-        dto.setEmail("john@example.com");
+        dto.setAddress("123 Rue");
+        dto.setCity("Paris");
+        dto.setZip("75000");
+        dto.setPhone("0102030405");
+        dto.setEmail("john.doe@example.com");
         return dto;
     }
 }

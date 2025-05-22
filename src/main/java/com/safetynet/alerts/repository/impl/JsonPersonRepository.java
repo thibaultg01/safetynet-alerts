@@ -69,14 +69,20 @@ public class JsonPersonRepository implements PersonRepository {
 	}
 
 	@Override
-	public void deleteByName(String firstName, String lastName) {
+	public boolean deleteByName(String firstName, String lastName) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Suppression de la personne en mémoire.");
 		}
-		dataLoader.getPersons().removeIf(
+		boolean removed = dataLoader.getPersons().removeIf(
 				p -> p.getFirstName().equalsIgnoreCase(firstName) && p.getLastName().equalsIgnoreCase(lastName));
+		if (removed) {
 		saveToFile();
 		logger.info("Personne supprimée avec succès : {} {}", firstName, lastName);
+		}
+		else {
+            logger.error("Échec de la suppression : Personne introuvable pour suppression : {} {}", firstName, lastName);
+        }
+		return removed;
 	}
 
 	@Override
