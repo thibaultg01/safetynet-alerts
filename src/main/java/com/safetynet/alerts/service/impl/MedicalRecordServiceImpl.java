@@ -74,6 +74,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
             logger.info("Suppression réussie du dossier médical : {} {}", firstName, lastName);
         } else {
             logger.error("Échec de la suppression : dossier médical introuvable pour {} {}", firstName, lastName);
+            throw new IllegalArgumentException("Dossier médical introuvable.");
         }
         return deleted;
     }

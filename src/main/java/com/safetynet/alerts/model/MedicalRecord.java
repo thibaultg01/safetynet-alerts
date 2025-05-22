@@ -2,6 +2,8 @@ package com.safetynet.alerts.model;
 
 import java.util.List;
 
+import com.safetynet.alerts.dto.MedicalRecordDTO;
+
 public class MedicalRecord {
 
     private String firstName;
@@ -19,6 +21,14 @@ public class MedicalRecord {
         this.birthdate = birthdate;
         this.medications = medications;
         this.allergies = allergies;
+    }
+    
+    public MedicalRecord(MedicalRecordDTO dto) {
+        this.firstName = dto.getFirstName();
+        this.lastName = dto.getLastName();
+        this.birthdate = dto.getBirthdate();
+        this.medications = dto.getMedications();
+        this.allergies = dto.getAllergies();
     }
 
     public String getFirstName() {
