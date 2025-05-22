@@ -50,8 +50,8 @@ public class MedicalRecordControllerTest {
         mockMvc.perform(post("/medicalRecord")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("John"));
+                .andExpect(status().isCreated())
+                .andExpect(content().json(objectMapper.writeValueAsString(sampleDto)));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class MedicalRecordControllerTest {
         mockMvc.perform(delete("/medicalRecord")
                 .param("firstName", "John")
                 .param("lastName", "Doe"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.safetynet.alerts.dto.MedicalRecordDTO;
 import com.safetynet.alerts.service.MedicalRecordService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class MedicalRecordController {
 		MedicalRecordDTO created = medicalRecordService.addMedicalRecord(dto);
 
 		logger.info("Dossier médical ajouté avec succès : {} {}", created.getFirstName(), created.getLastName());
-		return ResponseEntity.ok(created);
+		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
 	/**
@@ -73,6 +74,6 @@ public class MedicalRecordController {
 
 		medicalRecordService.deleteMedicalRecord(firstName, lastName);
 		logger.info("Dossier médical supprimé avec succès : {} {}", firstName, lastName);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 }
