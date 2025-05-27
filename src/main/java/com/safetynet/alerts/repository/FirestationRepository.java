@@ -7,7 +7,7 @@ public interface FirestationRepository {
     List<String> getAddressesByStationNumber(int stationNumber);
     Set<String> findAddressesByStationNumbers(List<Integer> stationNumbers);
     int findStationNumberByAddress(String address);
-    void addMapping(String address, int station);
-    void updateMapping(String address, int newStation);
-    void deleteMapping(String address, Integer station);
+    boolean addMapping(String address, int station);
+    boolean updateMapping(String address, int newStation);
+    boolean deleteMapping(String address, Integer station);
 }

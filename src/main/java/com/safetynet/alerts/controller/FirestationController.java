@@ -25,7 +25,7 @@ public class FirestationController {
 
     @GetMapping("/firestation")
     public ResponseEntity<FirestationCoverageResponseDTO> getPersonsCoveredByStation(@RequestParam int stationNumber) {
-        logger.info("Requête reçue : GET /firestation?stationNumber={}", stationNumber);
+        logger.debug("Requête reçue : GET /firestation?stationNumber={}", stationNumber);
 
         FirestationCoverageResponseDTO response = firestationService.getPersonsCoveredByStation(stationNumber);
 

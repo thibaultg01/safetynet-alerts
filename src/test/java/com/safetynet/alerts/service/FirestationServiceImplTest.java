@@ -1,5 +1,7 @@
 package com.safetynet.alerts.service;
 
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -8,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
@@ -51,5 +55,53 @@ public class FirestationServiceImplTest {
         Assertions.assertTrue(result.contains("841-874-6512"));
         Assertions.assertTrue(result.contains("841-874-7458"));
         Assertions.assertFalse(result.contains("841-874-1234"));
+    }
+    
+    @Test
+    void testAddMapping_Success() {
+        when(firestationRepository.addMapping("123 Main St", 1)).thenReturn(true);
+        assertDoesNotThrow(() -> firestationService.addMapping("123 Main St", 1));
+        verify(firestationRepository).addMapping("123 Main St", 1);
+    }
+
+    @Test
+    void testAddMapping_AlreadyExists() {
+        when(firestationRepository.addMapping("123 Main St", 1)).thenReturn(false);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                firestationService.addMapping("123 Main St", 1));
+        assertEquals("L'attribution de cette adresse existe déjà.", exception.getMessage());
+        verify(firestationRepository).addMapping("123 Main St", 1);
+    }
+
+    @Test
+    void testUpdateMapping_Success() {
+        when(firestationRepository.updateMapping("123 Main St", 2)).thenReturn(true);
+        assertDoesNotThrow(() -> firestationService.updateMapping("123 Main St", 2));
+        verify(firestationRepository).updateMapping("123 Main St", 2);
+    }
+
+    @Test
+    void testUpdateMapping_NotFound() {
+        when(firestationRepository.updateMapping("Unknown St", 2)).thenReturn(false);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                firestationService.updateMapping("Unknown St", 2));
+        assertEquals("Adresse introuvable.", exception.getMessage());
+        verify(firestationRepository).updateMapping("Unknown St", 2);
+    }
+
+    @Test
+    void testDeleteMapping_Success() {
+        when(firestationRepository.deleteMapping("123 Main St", 1)).thenReturn(true);
+        assertDoesNotThrow(() -> firestationService.deleteMapping("123 Main St", 1));
+        verify(firestationRepository).deleteMapping("123 Main St", 1);
+    }
+
+    @Test
+    void testDeleteMapping_NotFound() {
+        when(firestationRepository.deleteMapping("Unknown St", 2)).thenReturn(false);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                firestationService.deleteMapping("Unknown St", 2));
+        assertEquals("Caserne introuvable.", exception.getMessage());
+        verify(firestationRepository).deleteMapping("Unknown St", 2);
     }
 }

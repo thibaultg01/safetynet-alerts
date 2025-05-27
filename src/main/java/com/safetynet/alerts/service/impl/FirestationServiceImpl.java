@@ -42,7 +42,7 @@ public class FirestationServiceImpl implements FirestationService {
         List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
 
         if (addresses.isEmpty()) {
-            logger.warn("Aucune adresse trouvée pour la caserne n°{}", stationNumber);
+            logger.error("Aucune adresse trouvée pour la caserne n°{}", stationNumber);
         } else if(logger.isDebugEnabled()){
             logger.debug("{} adresse(s) trouvée(s) pour la caserne n°{} : {}", addresses.size(), stationNumber, addresses);
         }
@@ -113,18 +113,45 @@ public class FirestationServiceImpl implements FirestationService {
         return phoneNumbers;
     }
     
+    /** {@inheritDoc} */
     @Override
     public void addMapping(String address, int station) {
-        firestationRepository.addMapping(address, station);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Ajout d'une nouvelle caserne à l'adresse : {}", address);
+        }
+
+        boolean added = firestationRepository.addMapping(address, station);
+        if (!added) {
+            logger.error("La caserne existe déjà à l'adresse : {}", address);
+            throw new IllegalArgumentException("L'attribution de cette adresse existe déjà.");
+        }
     }
 
     @Override
     public void updateMapping(String address, int newStation) {
-        firestationRepository.updateMapping(address, newStation);
+    	if (logger.isDebugEnabled()) {
+            logger.debug("Recherche de la caserne à mettre à jour à l'adresse : {}", address);
+        }
+
+        boolean updated = firestationRepository.updateMapping(address, newStation);;
+        if (!updated) {
+                logger.error("Caserne introuvable à l'adresse : {}", address);
+            throw new IllegalArgumentException("Adresse introuvable.");
+        }
     }
 
     @Override
     public void deleteMapping(String address, Integer station) {
-        firestationRepository.deleteMapping(address, station);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Suppression de la caserne : adresse={} station={}", address, station);
+        }
+
+        boolean deleted = firestationRepository.deleteMapping(address, station);
+        if (!deleted) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Échec de la suppression : caserne introuvable pour adresse={} et station={}", address, station);
+            }
+            throw new IllegalArgumentException("Caserne introuvable.");
+        }
     }
 }
