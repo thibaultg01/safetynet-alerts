@@ -23,11 +23,18 @@ public class GlobalExceptionHandler {
         if (message != null && message.contains("existe déjà")) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(message); // 409 Conflict
         }
-        if (message != null && message.contains("introuvable")) {
+        if (message != null && (message.contains("introuvable") || message.contains("aucun"))) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message); // 404 Not Found
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message); // 400 fallback
+    }
+    
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+    	String message = ex.getMessage();
+        logger.error("Ressource introuvable : {}", message);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(Exception.class)
