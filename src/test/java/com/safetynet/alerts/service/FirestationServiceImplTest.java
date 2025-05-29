@@ -2,6 +2,7 @@ package com.safetynet.alerts.service;
 
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,8 +14,11 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.safetynet.alerts.dto.FirestationCoverageResponseDTO;
+import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
+import com.safetynet.alerts.repository.MedicalRecordRepository;
 import com.safetynet.alerts.repository.PersonRepository;
 import com.safetynet.alerts.service.impl.FirestationServiceImpl;
 
@@ -23,8 +27,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class FirestationServiceImplTest {
 
-    @Mock
+	@Mock
     private PersonRepository personRepository;
+
+    @Mock
+    private MedicalRecordRepository medicalRecordRepository;
 
     @Mock
     private FirestationRepository firestationRepository;
@@ -32,6 +39,89 @@ public class FirestationServiceImplTest {
     @InjectMocks
     private FirestationServiceImpl firestationService;
 
+    @Test
+    void testGetPersonsCoveredByStation_Success() {
+        int stationNumber = 3;
+
+        // Données simulées
+        String address = "1509 Culver St";
+
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress(address);
+        person.setPhone("841-874-6512");
+
+        MedicalRecord record = new MedicalRecord();
+        record.setFirstName("John");
+        record.setLastName("Doe");
+        record.setBirthdate("03/06/1984"); // > 18 ans
+
+        // Mocks
+        when(firestationRepository.getAddressesByStationNumber(stationNumber)).thenReturn(List.of(address));
+        when(personRepository.findAll()).thenReturn(List.of(person));
+        when(medicalRecordRepository.findByFirstNameAndLastName("John", "Doe")).thenReturn(record);
+
+        // Appel
+        FirestationCoverageResponseDTO response = firestationService.getPersonsCoveredByStation(stationNumber);
+
+        // Vérifs
+        assertEquals(1, response.getPersons().size());
+        assertEquals(1, response.getNumberOfAdults());
+        assertEquals(0, response.getNumberOfChildren());
+        assertEquals("John", response.getPersons().get(0).getFirstName());
+    }
+    
+    @Test
+    void testGetPersonsCoveredByStation_NoAddresses() {
+        int stationNumber = 99;
+
+        when(firestationRepository.getAddressesByStationNumber(stationNumber)).thenReturn(Collections.emptyList());
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                firestationService.getPersonsCoveredByStation(stationNumber));
+
+        assertEquals("Adresse(s) introuvable pour la station n°99", ex.getMessage());
+    }
+    
+    @Test
+    void testGetPersonsCoveredByStation_NoPersonsMatched() {
+        int stationNumber = 2;
+        String address = "29 15th St";
+
+        // L'adresse existe mais aucune personne n'y vit
+        when(firestationRepository.getAddressesByStationNumber(stationNumber)).thenReturn(List.of(address));
+        when(personRepository.findAll()).thenReturn(Collections.emptyList());
+
+        FirestationCoverageResponseDTO response = firestationService.getPersonsCoveredByStation(stationNumber);
+
+        assertEquals(0, response.getPersons().size());
+        assertEquals(0, response.getNumberOfAdults());
+        assertEquals(0, response.getNumberOfChildren());
+    }
+    
+    @Test
+    void testGetPersonsCoveredByStation_PersonWithoutMedicalRecord() {
+        int stationNumber = 3;
+        String address = "1509 Culver St";
+
+        Person person = new Person();
+        person.setFirstName("Jane");
+        person.setLastName("Smith");
+        person.setAddress(address);
+        person.setPhone("123-456-7890");
+
+        when(firestationRepository.getAddressesByStationNumber(stationNumber)).thenReturn(List.of(address));
+        when(personRepository.findAll()).thenReturn(List.of(person));
+        when(medicalRecordRepository.findByFirstNameAndLastName("Jane", "Smith")).thenReturn(null);
+
+        FirestationCoverageResponseDTO response = firestationService.getPersonsCoveredByStation(stationNumber);
+
+        assertEquals(0, response.getPersons().size());
+        assertEquals(0, response.getNumberOfAdults());
+        assertEquals(0, response.getNumberOfChildren());
+    }
+    
     @Test
     public void getPhoneNumbersByFirestation_shouldReturnCorrectPhones() {
         // Given

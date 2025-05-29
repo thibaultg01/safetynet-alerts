@@ -25,14 +25,11 @@ public class FirestationController {
 
     @GetMapping("/firestation")
     public ResponseEntity<FirestationCoverageResponseDTO> getPersonsCoveredByStation(@RequestParam int stationNumber) {
+    	if (logger.isDebugEnabled()) {
         logger.debug("Requête reçue : GET /firestation?stationNumber={}", stationNumber);
+        }
 
         FirestationCoverageResponseDTO response = firestationService.getPersonsCoveredByStation(stationNumber);
-
-        if (response.getPersons().isEmpty()) {
-            logger.warn("Aucune personne trouvée pour la caserne n°{}", stationNumber);
-            return ResponseEntity.noContent().build();
-        }
 
         logger.info("Réponse préparée pour la caserne n°{} : {} personnes", stationNumber, response.getPersons().size());
         return ResponseEntity.ok(response);
@@ -40,23 +37,32 @@ public class FirestationController {
     
     @PostMapping("/firestation")
     public ResponseEntity<Void> addMapping(@RequestBody Firestation firestation) {
-        logger.info("POST /firestation - Ajout mapping : {}", firestation);
+    	if (logger.isDebugEnabled()) {
+            logger.debug("POST /firestation - Ajout mapping : {}", firestation);
+    	}
         firestationService.addMapping(firestation.getAddress(), firestation.getStation());
+        logger.info("Station ajoutée avec succès : {} {}", firestation.getAddress(), firestation.getStation());
         return ResponseEntity.status(201).build();
     }
 
     @PutMapping("/firestation")
     public ResponseEntity<Void> updateMapping(@RequestBody Firestation firestation) {
-        logger.info("PUT /firestation - Mise à jour mapping : {}", firestation);
+    	if (logger.isDebugEnabled()) {
+            logger.debug("PUT /firestation - Mise à jour mapping : {}", firestation);
+    	}
         firestationService.updateMapping(firestation.getAddress(), firestation.getStation());
+        logger.info("Station mise à jour avec succès : {} {}", firestation.getAddress(), firestation.getStation());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/firestation")
     public ResponseEntity<Void> deleteMapping(@RequestParam(required = false) String address,
                                               @RequestParam(required = false) Integer station) {
-        logger.info("DELETE /firestation - Suppression mapping address='{}' station='{}'", address, station);
+    	if (logger.isDebugEnabled()) {
+            logger.debug("DELETE /firestation - Suppression mapping address='{}' station='{}'", address, station);
+    	}
         firestationService.deleteMapping(address, station);
+        logger.info("Station supprimée avec succès : {} {}", address, station);
         return ResponseEntity.noContent().build();
     }
 }
