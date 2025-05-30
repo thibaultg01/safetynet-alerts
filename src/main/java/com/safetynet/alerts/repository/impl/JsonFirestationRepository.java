@@ -23,7 +23,7 @@ public class JsonFirestationRepository implements FirestationRepository {
 
 	private static final Logger logger = LogManager.getLogger(JsonPersonRepository.class);
 
-	private static final String DATA_FILE_PATH = "src/main/resources/dataTest.json";
+	private static final String DATA_FILE_PATH = "src/main/resources/data.json";
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -95,7 +95,7 @@ public class JsonFirestationRepository implements FirestationRepository {
 		return removed;
 	}
 
-	private void saveToFile() {
+	public void saveToFile() {
 		try {
 			objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(DATA_FILE_PATH), dataLoader);
 		} catch (IOException e) {
