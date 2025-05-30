@@ -21,7 +21,7 @@ public class JsonPersonRepository implements PersonRepository {
 	private static final Logger logger = LogManager.getLogger(JsonPersonRepository.class);
 	private final DataLoader dataLoader;
 	private final ObjectMapper objectMapper = new ObjectMapper();
-	private static final String DATA_FILE_PATH = "src/main/resources/dataTest.json";
+	private static final String DATA_FILE_PATH = "src/main/resources/data.json";
 
 	public JsonPersonRepository(DataLoader dataLoader) {
 		this.dataLoader = dataLoader;
@@ -97,7 +97,7 @@ public class JsonPersonRepository implements PersonRepository {
 		});
 	}
 
-	private void saveToFile() {
+	public void saveToFile() {
 		try {
 			objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(DATA_FILE_PATH), dataLoader);
 			if (logger.isDebugEnabled()) {
