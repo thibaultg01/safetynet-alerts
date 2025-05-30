@@ -20,95 +20,83 @@ public class JsonMedicalRecordRepository implements MedicalRecordRepository {
 
 	private static final Logger logger = LogManager.getLogger(JsonMedicalRecordRepository.class);
 
-    private final DataLoader dataLoader;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String DATA_FILE_PATH = "src/main/resources/dataTest.json";
+	private final DataLoader dataLoader;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	private static final String DATA_FILE_PATH = "src/main/resources/data.json";
 
-    public JsonMedicalRecordRepository(DataLoader dataLoader) {
-        this.dataLoader = dataLoader;
-    }
+	public JsonMedicalRecordRepository(DataLoader dataLoader) {
+		this.dataLoader = dataLoader;
+	}
 
-    @Override
-    public List<MedicalRecord> findAll() {
-        return dataLoader.getMedicalRecords();
-    }
+	@Override
+	public List<MedicalRecord> findAll() {
+		return dataLoader.getMedicalRecords();
+	}
 
-    @Override
-    public MedicalRecord findByFirstNameAndLastName(String firstName, String lastName) {
-        return dataLoader.getMedicalRecords().stream()
-                .filter(mr -> mr.getFirstName().equalsIgnoreCase(firstName)
-                           && mr.getLastName().equalsIgnoreCase(lastName))
-                .findFirst()
-                .orElse(null);
-    }
-    
-    @Override
-    public Optional<MedicalRecord> findByName(String firstName, String lastName) {
-        return dataLoader.getMedicalRecords().stream()
-                .filter(r -> r.getFirstName().equalsIgnoreCase(firstName)
-                        && r.getLastName().equalsIgnoreCase(lastName))
-                .findFirst();
-    }
+	@Override
+	public MedicalRecord findByFirstNameAndLastName(String firstName, String lastName) {
+		return dataLoader.getMedicalRecords().stream().filter(
+				mr -> mr.getFirstName().equalsIgnoreCase(firstName) && mr.getLastName().equalsIgnoreCase(lastName))
+				.findFirst().orElse(null);
+	}
 
-    @Override
-    public MedicalRecord save(MedicalRecord record) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Ajout du dossier médical en mémoire : {} {}", record.getFirstName(), record.getLastName());
-        }
+	@Override
+	public Optional<MedicalRecord> findByName(String firstName, String lastName) {
+		return dataLoader.getMedicalRecords().stream()
+				.filter(r -> r.getFirstName().equalsIgnoreCase(firstName) && r.getLastName().equalsIgnoreCase(lastName))
+				.findFirst();
+	}
 
-        dataLoader.getMedicalRecords().add(record);
-        writeToFile();
+	@Override
+	public MedicalRecord save(MedicalRecord record) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Ajout du dossier médical en mémoire : {} {}", record.getFirstName(), record.getLastName());
+		}
 
-        logger.info("Dossier médical enregistré avec succès : {} {}", record.getFirstName(), record.getLastName());
-        return record;
-    }
+		dataLoader.getMedicalRecords().add(record);
+		writeToFile();
 
-    @Override
-    public MedicalRecord update(MedicalRecordDTO dto) {
-        Optional<MedicalRecord> existingOpt = findByName(dto.getFirstName(), dto.getLastName());
+		logger.info("Dossier médical enregistré avec succès : {} {}", record.getFirstName(), record.getLastName());
+		return record;
+	}
 
-        if (existingOpt.isPresent()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Mise à jour du dossier médical : {} {}", dto.getFirstName(), dto.getLastName());
-            }
+	@Override
+	public MedicalRecord update(MedicalRecordDTO dto) {
 
-            MedicalRecord record = existingOpt.get();
-            record.setBirthdate(dto.getBirthdate());
-            record.setMedications(dto.getMedications());
-            record.setAllergies(dto.getAllergies());
+		if (logger.isDebugEnabled()) {
+			logger.debug("Mise à jour du dossier médical : {} {}", dto.getFirstName(), dto.getLastName());
+		}
+		MedicalRecord record = findByName(dto.getFirstName(), dto.getLastName()).get();
+		record.setBirthdate(dto.getBirthdate());
+		record.setMedications(dto.getMedications());
+		record.setAllergies(dto.getAllergies());
 
-            writeToFile();
-            logger.info("Dossier médical mis à jour avec succès : {} {}", dto.getFirstName(), dto.getLastName());
-            return record;
-        }
+		writeToFile();
+		logger.info("Dossier médical mis à jour avec succès : {} {}", dto.getFirstName(), dto.getLastName());
+		return record;
+	}
 
-        logger.error("Échec de la mise à jour : dossier médical introuvable pour {} {}", dto.getFirstName(), dto.getLastName());
-        throw new IllegalArgumentException("Dossier médical introuvable.");
-    }
+	@Override
+	public boolean delete(String firstName, String lastName) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Suppression du dossier médical : {} {}", firstName, lastName);
+		}
 
-    @Override
-    public boolean delete(String firstName, String lastName) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Suppression du dossier médical : {} {}", firstName, lastName);
-        }
+		boolean removed = dataLoader.getMedicalRecords().removeIf(
+				r -> r.getFirstName().equalsIgnoreCase(firstName) && r.getLastName().equalsIgnoreCase(lastName));
 
-        boolean removed = dataLoader.getMedicalRecords().removeIf(r ->
-                r.getFirstName().equalsIgnoreCase(firstName)
-                        && r.getLastName().equalsIgnoreCase(lastName));
+		if (removed) {
+			writeToFile();
+			logger.info("Dossier médical supprimé avec succès : {} {}", firstName, lastName);
+		} else {
+			logger.error("Échec de la suppression : dossier médical introuvable pour {} {}", firstName, lastName);
+		}
 
-        if (removed) {
-            writeToFile();
-            logger.info("Dossier médical supprimé avec succès : {} {}", firstName, lastName);
-        } else {
-            logger.error("Échec de la suppression : dossier médical introuvable pour {} {}", firstName, lastName);
-        }
+		return removed;
+	}
 
-        return removed;
-    }
-
-
-    private void writeToFile() {
-    	try {
+	public void writeToFile() {
+		try {
 			objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(DATA_FILE_PATH), dataLoader);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Fichier dataTest.json mis à jour.");
@@ -117,5 +105,5 @@ public class JsonMedicalRecordRepository implements MedicalRecordRepository {
 			logger.error("Erreur lors de la sauvegarde du fichier JSON : {}", e.getMessage(), e);
 			throw new RuntimeException("Erreur lors de la sauvegarde du fichier data.json", e);
 		}
-    }
+	}
 }
