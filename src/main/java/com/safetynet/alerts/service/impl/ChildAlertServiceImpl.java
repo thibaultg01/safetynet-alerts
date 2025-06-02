@@ -19,6 +19,10 @@ import com.safetynet.alerts.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Implémentation du service {@link ChildAlertService} qui permet
+ * de récupérer les enfants vivant à une adresse donnée, accompagnés des autres membres du foyer.
+ */
 @Service
 public class ChildAlertServiceImpl implements ChildAlertService {
 
@@ -32,6 +36,13 @@ public class ChildAlertServiceImpl implements ChildAlertService {
         this.medicalRecordRepository = medicalRecordRepository;
     }
 
+    /**
+     * Récupère les enfants (moins de 18 ans) vivant à l'adresse spécifiée,
+     * accompagnés des membres adultes du foyer.
+     *
+     * @param address l'adresse à interroger
+     * @return une liste de {@link ChildAlertDTO}, vide si aucun enfant trouvé
+     */
     @Override
     public List<ChildAlertDTO> getChildrenByAddress(String address) {
     	logger.info("Recherche des enfants à l'adresse : {}", address);
