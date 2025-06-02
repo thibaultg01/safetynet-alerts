@@ -76,12 +76,12 @@ public class JsonPersonRepository implements PersonRepository {
 		boolean removed = dataLoader.getPersons().removeIf(
 				p -> p.getFirstName().equalsIgnoreCase(firstName) && p.getLastName().equalsIgnoreCase(lastName));
 		if (removed) {
-		saveToFile();
-		logger.info("Personne supprimée avec succès : {} {}", firstName, lastName);
+			saveToFile();
+			logger.info("Personne supprimée avec succès : {} {}", firstName, lastName);
+		} else {
+			logger.error("Échec de la suppression : Personne introuvable pour suppression : {} {}", firstName,
+					lastName);
 		}
-		else {
-            logger.error("Échec de la suppression : Personne introuvable pour suppression : {} {}", firstName, lastName);
-        }
 		return removed;
 	}
 
