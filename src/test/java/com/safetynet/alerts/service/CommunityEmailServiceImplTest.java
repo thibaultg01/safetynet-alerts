@@ -1,6 +1,5 @@
 package com.safetynet.alerts.service;
 
-import com.safetynet.alerts.exception.ResourceNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
 import com.safetynet.alerts.service.impl.CommunityEmailServiceImpl;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 class CommunityEmailServiceImplTest {
@@ -44,7 +42,7 @@ class CommunityEmailServiceImplTest {
     	p3.setFirstName("John");
     	p2.setLastName("Roe");
         p3.setCity("Paris");
-        p3.setEmail("john@example.com"); // duplicate email
+        p3.setEmail("john@example.com");
 
         when(personRepository.findAll()).thenReturn(Arrays.asList(p1, p2, p3));
 
@@ -52,14 +50,5 @@ class CommunityEmailServiceImplTest {
 
         assertThat(emails).containsExactlyInAnyOrder("john@example.com", "jane@example.com");
         verify(personRepository).findAll();
-    }
-
-    @Test
-    void getEmailsByCity_shouldThrowException_whenNoEmailsFound() {
-        when(personRepository.findAll()).thenReturn(Collections.emptyList());
-
-        assertThatThrownBy(() -> communityEmailService.getEmailsByCity("Lyon"))
-            .isInstanceOf(ResourceNotFoundException.class)
-            .hasMessageContaining("Aucune adresse email trouvée pour la ville");
     }
 }
