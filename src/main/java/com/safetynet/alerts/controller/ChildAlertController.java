@@ -13,9 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Contrôleur REST pour le endpoint childAlert.
- * Ce contrôleur permet de récupérer les enfants et les membres de leur foyer
- * à une adresse donnée.
+ * Contrôleur REST pour le endpoint childAlert. Ce contrôleur permet de
+ * récupérer les enfants et les membres de leur foyer à une adresse donnée.
  */
 
 @RestController
@@ -30,12 +29,12 @@ public class ChildAlertController {
 	}
 
 	/**
-     * Endpoint REST permettant de récupérer les enfants vivant à une adresse donnée,
-     * ainsi que les autres membres du foyer.
-     *
-     * @param address l'adresse ciblée
-     * @return une liste de {@link ChildAlertDTO}
-     */
+	 * Endpoint REST permettant de récupérer les enfants vivant à une adresse
+	 * donnée, ainsi que les autres membres du foyer.
+	 *
+	 * @param address l'adresse ciblée
+	 * @return une liste de {@link ChildAlertDTO}
+	 */
 	@GetMapping("/childAlert")
 	public ResponseEntity<?> getChildAlert(@RequestParam String address) {
 		if (logger.isDebugEnabled()) {

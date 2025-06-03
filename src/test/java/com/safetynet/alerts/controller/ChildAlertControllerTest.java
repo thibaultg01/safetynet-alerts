@@ -17,31 +17,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ChildAlertController.class)
 class ChildAlertControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private ChildAlertService childAlertService;
+	@MockBean
+	private ChildAlertService childAlertService;
 
-    @Test
-    void testGetChildrenByAddress_ReturnsChildren() throws Exception {
-        ChildAlertDTO child = new ChildAlertDTO("John", "Boyd", 9, List.of());
-        when(childAlertService.getChildrenByAddress("1509 Culver St")).thenReturn(List.of(child));
+	@Test
+	void testGetChildrenByAddress_ReturnsChildren() throws Exception {
+		ChildAlertDTO child = new ChildAlertDTO("John", "Boyd", 9, List.of());
+		when(childAlertService.getChildrenByAddress("1509 Culver St")).thenReturn(List.of(child));
 
-        mockMvc.perform(get("/childAlert")
-                        .param("address", "1509 Culver St"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("John"))
-                .andExpect(jsonPath("$[0].age").value(9));
-    }
+		mockMvc.perform(get("/childAlert").param("address", "1509 Culver St")).andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].firstName").value("John")).andExpect(jsonPath("$[0].age").value(9));
+	}
 
-    @Test
-    void testGetChildrenByAddress_NoChildren() throws Exception {
-        when(childAlertService.getChildrenByAddress("unknown")).thenReturn(List.of());
+	@Test
+	void testGetChildrenByAddress_NoChildren() throws Exception {
+		when(childAlertService.getChildrenByAddress("unknown")).thenReturn(List.of());
 
-        mockMvc.perform(get("/childAlert")
-                        .param("address", "unknown"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("[]"));
-    }
+		mockMvc.perform(get("/childAlert").param("address", "unknown")).andExpect(status().isOk())
+				.andExpect(content().string("[]"));
+	}
 }
