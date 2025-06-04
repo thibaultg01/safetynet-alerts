@@ -1,0 +1,551 @@
+{
+	"info": {
+		"_postman_id": "4387e218-9db4-468b-8947-5082bd956517",
+		"name": "SafetyNet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44757600",
+		"_collection_link": "https://thibault-6954904.postman.co/workspace/Thibault's-Workspace~e8d5fec4-b47c-4fb5-802d-57219bcc59b5/collection/44757600-4387e218-9db4-468b-8947-5082bd956517?action=share&source=collection_link&creator=44757600"
+	},
+	"item": [
+		{
+			"name": "MedicalRecord",
+			"item": [
+				{
+					"name": "http://localhost:8080/medicalRecord",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Wish\",\r\n  \"birthdate\": \"01/01/1990\",\r\n  \"medications\": [\"doliprane:500mg\"],\r\n  \"allergies\": [\"pollen\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/medicalRecord",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"medicalRecord"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:8080/medicalRecord",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doa\",\r\n  \"birthdate\": \"01/01/1990\",\r\n  \"medications\": [\"doliprane:500mg\"],\r\n  \"allergies\": [\"pollen\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/medicalRecord",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"medicalRecord"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 21:07:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "http://localhost:8080/medicalRecord",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Wish\",\r\n  \"birthdate\": \"02/02/1992\",\r\n  \"medications\": [\"aspirine:100mg\"],\r\n  \"allergies\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/medicalRecord",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"medicalRecord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/medicalRecord?firstName=John&lastName=Doggg",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/medicalRecord?firstName=John&lastName=Wish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"medicalRecord"
+							],
+							"query": [
+								{
+									"key": "firstName",
+									"value": "John"
+								},
+								{
+									"key": "lastName",
+									"value": "Wish"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint",
+			"item": [
+				{
+					"name": "http://localhost:8080/childAlert?address=1509 Culver St",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/childAlert?address=1509 Culver St",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"childAlert"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "1509 Culver St"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/flood/stations?stations=4,1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/flood/stations?stations=4,1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"flood",
+								"stations"
+							],
+							"query": [
+								{
+									"key": "stations",
+									"value": "4,1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/phoneAlert?firestation=2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/phoneAlert?firestation=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"phoneAlert"
+							],
+							"query": [
+								{
+									"key": "firestation",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/communityEmail?city=Culver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/communityEmail?city=Culver",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"communityEmail"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Culver"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/fire?address=1509 Culver St",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/fire?address=1509 Culver St",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"fire"
+							],
+							"query": [
+								{
+									"key": "address",
+									"value": "1509 Culver St"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/firestation?stationNumber=1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/firestation?stationNumber=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"firestation"
+							],
+							"query": [
+								{
+									"key": "stationNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/personInfo?lastName=Boyd",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/personInfo?lastName=Boyd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"personInfo"
+							],
+							"query": [
+								{
+									"key": "lastName",
+									"value": "Boyd"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Firestation",
+			"item": [
+				{
+					"name": "http://localhost:8080/firestation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"22 rue de la pierre\",\r\n  \"station\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/firestation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"firestation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/firestation?stationNumber=4",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/firestation?stationNumber=4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"firestation"
+							],
+							"query": [
+								{
+									"key": "stationNumber",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/firestation?address=1509 Culver St",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/firestation?station=6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"firestation"
+							],
+							"query": [
+								{
+									"key": "station",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/firestation",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"22 rue de la pierre\",\r\n  \"station\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/firestation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"firestation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "http://localhost:8080/person",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Wish\",\r\n  \"address\": \"22 rue de la pierre\",\r\n  \"city\": \"Culver\",\r\n  \"zip\": \"97451\",\r\n  \"phone\": \"841-874-6512\",\r\n  \"email\": \"johndoe@email.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/person",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Wish\",\r\n  \"address\": \"22 rue de la pierre\",\r\n  \"city\": \"Culver\",\r\n  \"zip\": \"97451\",\r\n  \"phone\": \"000-000-5555\",\r\n  \"email\": \"newjohn@email.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/person?firstName=John&lastName=Tabac",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/person?firstName=John&lastName=Wish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "firstName",
+									"value": "John"
+								},
+								{
+									"key": "lastName",
+									"value": "Wish"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
