@@ -34,18 +34,15 @@ public class FirestationServiceImpl implements FirestationService {
 		this.medicalRecordRepository = medicalRecordRepository;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public FirestationCoverageResponseDTO getPersonsCoveredByStation(int stationNumber) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Recherche des personnes couvertes par la caserne n°{}", stationNumber);
 		}
-		
+
 		List<String> addresses = firestationRepository.getAddressesByStationNumber(stationNumber);
-		if (addresses.isEmpty()) {
-			logger.error("Aucune adresse trouvée pour la caserne n°{}", stationNumber);
-			throw new IllegalArgumentException("Adresse(s) introuvable pour la station n°" + stationNumber);
-		}
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("{} adresse(s) trouvée(s) pour la caserne n°{} : {}", addresses.size(), stationNumber,
 					addresses);
@@ -91,6 +88,7 @@ public class FirestationServiceImpl implements FirestationService {
 		return response;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<String> getPhoneNumbersByFirestation(int stationNumber) {
 		if (logger.isDebugEnabled()) {
