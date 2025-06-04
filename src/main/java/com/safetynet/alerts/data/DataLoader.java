@@ -20,12 +20,11 @@ import java.util.Map;
 public class DataLoader {
 
     private ObjectMapper objectMapper = new ObjectMapper();
-    private String jsonFilePath; // null en prod
+    private String jsonFilePath;
 
     private List<Person> persons = new ArrayList<>();
     private List<Firestation> firestations = new ArrayList<>();
     private List<MedicalRecord> medicalRecords = new ArrayList<>();
-
     /**
      * Constructeur par défaut pour Spring
      */
@@ -33,42 +32,20 @@ public class DataLoader {
         // jsonFilePath reste null, Spring utilisera init()
     }
 
-    /**
-     * Constructeur utilisé en test avec un chemin explicite
-     */
-    public DataLoader(String jsonFilePath, ObjectMapper objectMapper) {
-        this.jsonFilePath = jsonFilePath;
-        this.objectMapper = objectMapper;
-    }
-
     @PostConstruct
     public void init() {
-        if (this.jsonFilePath == null) {
             try (InputStream inputStream = new ClassPathResource("data.json").getInputStream()) {
                 Map<String, Object> fullData = objectMapper.readValue(inputStream, new TypeReference<>() {});
                 loadListsFromMap(fullData);
             } catch (Exception e) {
                 throw new RuntimeException("Erreur lors du chargement de data.json depuis le classpath", e);
             }
-        } else {
-            loadData();
-        }
-    }
-
-    public void loadData() {
-        try {
-            File jsonFile = new File(jsonFilePath);
-            Map<String, Object> fullData = objectMapper.readValue(jsonFile, new TypeReference<>() {});
-            loadListsFromMap(fullData);
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors du chargement de data.json (chemin explicite)", e);
-        }
     }
 
     private void loadListsFromMap(Map<String, Object> fullData) {
         this.persons = objectMapper.convertValue(fullData.getOrDefault("persons", new ArrayList<>()), new TypeReference<>() {});
         this.firestations = objectMapper.convertValue(fullData.getOrDefault("firestations", new ArrayList<>()), new TypeReference<>() {});
-        this.medicalRecords = objectMapper.convertValue(fullData.getOrDefault("medicalrecords", new ArrayList<>()), new TypeReference<>() {});
+        this.medicalRecords = objectMapper.convertValue(fullData.getOrDefault("medicalRecords", new ArrayList<>()), new TypeReference<>() {});
     }
 
     // === Getters ===
@@ -84,8 +61,6 @@ public class DataLoader {
     public List<MedicalRecord> getMedicalRecords() {
         return medicalRecords;
     }
-
-    public String getJsonFilePath() {
-        return jsonFilePath;
-    }
+    
+    
 }
