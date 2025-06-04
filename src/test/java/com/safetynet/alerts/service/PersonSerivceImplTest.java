@@ -16,81 +16,81 @@ import static org.mockito.Mockito.*;
 
 class PersonServiceImplTest {
 
-    private PersonRepository repository;
-    private PersonServiceImpl service;
+	private PersonRepository repository;
+	private PersonServiceImpl service;
 
-    @BeforeEach
-    void setUp() {
-        repository = mock(PersonRepository.class);
-        service = new PersonServiceImpl(repository);
-    }
+	@BeforeEach
+	void setUp() {
+		repository = mock(PersonRepository.class);
+		service = new PersonServiceImpl(repository);
+	}
 
-    @Test
-    void testAddPerson_Success() {
-        PersonDTO dto = getSampleDTO();
-        when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
+	@Test
+	void testAddPerson_Success() {
+		PersonDTO dto = getSampleDTO();
+		when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
 
-        PersonDTO result = service.addPerson(dto);
+		PersonDTO result = service.addPerson(dto);
 
-        assertEquals(dto.getFirstName(), result.getFirstName());
-        verify(repository).save(any());
-    }
+		assertEquals(dto.getFirstName(), result.getFirstName());
+		verify(repository).save(any());
+	}
 
-    @Test
-    void testAddPerson_AlreadyExists() {
-        PersonDTO dto = getSampleDTO();
-        when(repository.findByName("John", "Doe")).thenReturn(Optional.of(new Person()));
+	@Test
+	void testAddPerson_AlreadyExists() {
+		PersonDTO dto = getSampleDTO();
+		when(repository.findByName("John", "Doe")).thenReturn(Optional.of(new Person()));
 
-        assertThrows(IllegalArgumentException.class, () -> service.addPerson(dto));
-        verify(repository, never()).save(any());
-    }
+		assertThrows(IllegalArgumentException.class, () -> service.addPerson(dto));
+		verify(repository, never()).save(any());
+	}
 
-    @Test
-    void testUpdatePerson_Success() {
-        PersonDTO dto = getSampleDTO();
-        Person person = new Person();
-        when(repository.findByName("John", "Doe")).thenReturn(Optional.of(person));
+	@Test
+	void testUpdatePerson_Success() {
+		PersonDTO dto = getSampleDTO();
+		Person person = new Person();
+		when(repository.findByName("John", "Doe")).thenReturn(Optional.of(person));
 
-        PersonDTO result = service.updatePerson(dto);
+		PersonDTO result = service.updatePerson(dto);
 
-        assertEquals(dto.getCity(), result.getCity());
-        verify(repository).update(any());
-    }
+		assertEquals(dto.getCity(), result.getCity());
+		verify(repository).update(any());
+	}
 
-    @Test
-    void testUpdatePerson_NotFound() {
-        PersonDTO dto = getSampleDTO();
-        when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
+	@Test
+	void testUpdatePerson_NotFound() {
+		PersonDTO dto = getSampleDTO();
+		when(repository.findByName("John", "Doe")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.updatePerson(dto));
-        verify(repository, never()).update(any());
-    }
+		assertThrows(IllegalArgumentException.class, () -> service.updatePerson(dto));
+		verify(repository, never()).update(any());
+	}
 
-    @Test
-    void testDeletePerson_Success() {
-        when(repository.deleteByName("John", "Doe")).thenReturn(true);
+	@Test
+	void testDeletePerson_Success() {
+		when(repository.deleteByName("John", "Doe")).thenReturn(true);
 
-        assertDoesNotThrow(() -> service.deletePerson("John", "Doe"));
-        verify(repository).deleteByName("John", "Doe");
-    }
+		assertDoesNotThrow(() -> service.deletePerson("John", "Doe"));
+		verify(repository).deleteByName("John", "Doe");
+	}
 
-    @Test
-    void testDeletePerson_NotFound() {
-        when(repository.deleteByName("John", "Doe")).thenReturn(false);
+	@Test
+	void testDeletePerson_NotFound() {
+		when(repository.deleteByName("John", "Doe")).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> service.deletePerson("John", "Doe"));
-        verify(repository).deleteByName("John", "Doe");
-    }
+		assertThrows(IllegalArgumentException.class, () -> service.deletePerson("John", "Doe"));
+		verify(repository).deleteByName("John", "Doe");
+	}
 
-    private PersonDTO getSampleDTO() {
-        PersonDTO dto = new PersonDTO();
-        dto.setFirstName("John");
-        dto.setLastName("Doe");
-        dto.setAddress("123 Rue");
-        dto.setCity("Paris");
-        dto.setZip("75000");
-        dto.setPhone("0102030405");
-        dto.setEmail("john.doe@example.com");
-        return dto;
-    }
+	private PersonDTO getSampleDTO() {
+		PersonDTO dto = new PersonDTO();
+		dto.setFirstName("John");
+		dto.setLastName("Doe");
+		dto.setAddress("123 Rue");
+		dto.setCity("Paris");
+		dto.setZip("75000");
+		dto.setPhone("0102030405");
+		dto.setEmail("john.doe@example.com");
+		return dto;
+	}
 }

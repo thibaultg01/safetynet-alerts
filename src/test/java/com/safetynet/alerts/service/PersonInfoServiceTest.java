@@ -33,8 +33,10 @@ class PersonInfoServiceImplTest {
 	void testGetPersonsByLastName_ReturnsInfo() {
 		String lastName = "Boyd";
 
-		Person person = new Person("John", lastName, "1509 Culver St", "Culver", "97451", "841-874-6512","john@example.com");
-		MedicalRecord record = new MedicalRecord("John", lastName, "06/03/1985", List.of("aznol:350mg"),List.of("peanut"));
+		Person person = new Person("John", lastName, "1509 Culver St", "Culver", "97451", "841-874-6512",
+				"john@example.com");
+		MedicalRecord record = new MedicalRecord("John", lastName, "06/03/1985", List.of("aznol:350mg"),
+				List.of("peanut"));
 
 		when(personRepository.findByLastName(lastName)).thenReturn(List.of(person));
 		when(medicalRecordRepository.findByFirstNameAndLastName("John", lastName)).thenReturn(record);

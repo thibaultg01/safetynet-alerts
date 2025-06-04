@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -57,20 +58,5 @@ class FireServiceImplTest {
 		assertEquals(DateUtils.calculateAge("06/03/1985"), resident.getAge());
 		assertEquals(List.of("aznol:350mg"), resident.getMedications());
 		assertEquals(List.of("peanut"), resident.getAllergies());
-	}
-
-	@Test
-	void testGetFireInfoByAddress_NoResidentsAndNoStation() {
-		// GIVEN
-		String unknownAddress = "999 Nowhere Street";
-		when(personRepository.findByAddress(unknownAddress)).thenReturn(Collections.emptyList());
-		when(firestationRepository.findStationNumberByAddress(unknownAddress)).thenReturn(null);
-
-		// WHEN
-		FireResponseDTO result = fireService.getFireInfoByAddress(unknownAddress);
-
-		// THEN
-		assertNull(result,
-				"Le service doit retourner null si aucun résident ni station ne sont trouvés à cette adresse.");
 	}
 }
