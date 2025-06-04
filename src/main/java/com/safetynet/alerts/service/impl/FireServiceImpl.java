@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.safetynet.alerts.dto.FirePersonDTO;
 import com.safetynet.alerts.dto.FireResponseDTO;
-import com.safetynet.alerts.exception.ResourceNotFoundException;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
@@ -66,9 +65,9 @@ public class FireServiceImpl implements FireService {
 		}
 
 		int stationNumber = firestationRepository.findStationNumberByAddress(address);
-		if (persons.isEmpty() && stationNumber == 0) {
-			logger.error("Aucune personne et station trouvée pour l'adresse : {}", address);
-			throw new ResourceNotFoundException("Aucune personne et station trouvée pour l'adresse : " + address);
+		if ((persons == null || persons.isEmpty()) && stationNumber == 0) {
+			logger.error("Aucun personne trouvé pour l'adresse {}", address);
+			return null;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Numéro de caserne trouvé pour l'adresse {} : {}", address, stationNumber);
@@ -77,11 +76,6 @@ public class FireServiceImpl implements FireService {
 		List<FirePersonDTO> personDTOs = persons.stream().map(person -> {
 			MedicalRecord record = medicalRecordRepository.findByFirstNameAndLastName(person.getFirstName(),
 					person.getLastName());
-
-			if (record == null) {
-				logger.warn("Aucun dossier médical trouvé pour {} {}", person.getFirstName(), person.getLastName());
-				return null;
-			}
 
 			int age = DateUtils.calculateAge(record.getBirthdate());
 			if (logger.isDebugEnabled()) {

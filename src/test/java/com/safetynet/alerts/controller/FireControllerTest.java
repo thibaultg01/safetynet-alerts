@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -39,10 +40,12 @@ class FireControllerTest {
 
 	@Test
 	void testGetFireInfoByAddress_EmptyList() throws Exception {
-		FireResponseDTO emptyResponse = new FireResponseDTO(0, List.of());
-		when(fireService.getFireInfoByAddress("Empty")).thenReturn(emptyResponse);
+		// GIVEN
+		String unknownAddress = "999 nullpart";
+		when(fireService.getFireInfoByAddress(unknownAddress)).thenReturn(null);
 
-		mockMvc.perform(get("/fire").param("address", "Empty")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.station").value(0)).andExpect(jsonPath("$.residents").isEmpty());
+		// WHEN + THEN
+		mockMvc.perform(get("/fire").param("address", unknownAddress).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().json("{}"));
 	}
 }

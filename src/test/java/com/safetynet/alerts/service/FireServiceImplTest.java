@@ -12,6 +12,7 @@ import com.safetynet.alerts.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,10 +61,16 @@ class FireServiceImplTest {
 
 	@Test
 	void testGetFireInfoByAddress_NoResidentsAndNoStation() {
-		String address = "Unknown";
-		when(personRepository.findByAddress(address)).thenReturn(List.of());
-		when(firestationRepository.findStationNumberByAddress(address)).thenReturn(0);
+		// GIVEN
+		String unknownAddress = "999 Nowhere Street";
+		when(personRepository.findByAddress(unknownAddress)).thenReturn(Collections.emptyList());
+		when(firestationRepository.findStationNumberByAddress(unknownAddress)).thenReturn(null);
 
-		assertThrows(RuntimeException.class, () -> fireService.getFireInfoByAddress(address));
+		// WHEN
+		FireResponseDTO result = fireService.getFireInfoByAddress(unknownAddress);
+
+		// THEN
+		assertNull(result,
+				"Le service doit retourner null si aucun résident ni station ne sont trouvés à cette adresse.");
 	}
 }
